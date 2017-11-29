@@ -33,7 +33,7 @@ webglUtils.createProgramFromFiles(gl, ['shaders/simple_m_vs.glsl', 'shaders/simp
     program = prog;
 });
 
-webglUtils.createProgramFromFiles(gl, ['shaders/pass_pos_vs.glsl', 'shaders/simple_fs.glsl']).then(prog => {
+webglUtils.createProgramFromFiles(gl, ['shaders/pass_pos_vs.glsl', 'shaders/back_grad_fs.glsl']).then(prog => {
     as2 = webglUtils.createAttributeSetters(gl, prog);
     us2 = webglUtils.createUniformSetters(gl, prog);
     program2 = prog;
@@ -46,7 +46,8 @@ webglUtils.createProgramFromFiles(gl, ['shaders/pass_pos_vs.glsl', 'shaders/simp
 
 function main(){
 
-    mosaic();
+    snow();
+    console.log('aa');
 }
 
 
