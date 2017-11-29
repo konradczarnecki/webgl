@@ -8,7 +8,7 @@ function mosaic() {
 
         let y = n * diagonal;
 
-        for(let m = -1; m < (h / diagonal); m++){
+        for(let m = -1; m < (w / diagonal); m++){
 
             let x = m * diagonal;
             if(n % 2 === 0) x += diagonal / 2;
@@ -49,9 +49,9 @@ function mosaic() {
         squares.forEach(square => {
 
             if(square.odd) {
-                square.rotation += 0.005 * delta - 0.005 * (square.rotation % 1);
+                square.rotation = 2*Math.sin(time/400);
             } else {
-                square.rotation -= 0.005 * delta;
+                square.rotation = Math.cos(time/500);
 
             }
             let matrix = m3.projection(w, h);
@@ -66,7 +66,7 @@ function mosaic() {
             webglUtils.setUniforms(uniformSetters, { u_matrix : matrix, u_color : square.color});
 
             gl.drawArrays(gl.TRIANGLES, 0, squareBuffer.numElements);
-        })
+        });
 
         requestAnimationFrame(render);
     }
