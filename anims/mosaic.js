@@ -4,11 +4,11 @@ function mosaic() {
     let diagonal = Math.sqrt(2) * size;
     let squares = [];
 
-    for(let n = 0; n < (h / diagonal) + 1; n++){
+    for(let n = -2; n < (h / diagonal) + 1; n++){
 
         let y = n * diagonal;
 
-        for(let m = -1; m < (w / diagonal); m++){
+        for(let m = -2; m < (w / diagonal) + 1; m++){
 
             let x = m * diagonal;
             if(n % 2 === 0) x += diagonal / 2;
@@ -18,6 +18,7 @@ function mosaic() {
                 y : y,
                 color : [ y/w, 0.4*y/w, 0.5*x/h, 0.8],
                 odd : n % 2,
+                oddM : m % 2,
                 rotation: Math.PI / 4
             };
 
@@ -40,7 +41,7 @@ function mosaic() {
         gl.useProgram(program2);
 
         webglUtils.setBuffersAndAttributes(gl, as2, squareBuffer);
-        webglUtils.setUniforms(us2, {u_color : [36/255, 105/255, 233/255, 0.9]});
+        webglUtils.setUniforms(us2, {u_color : [250/255, 105/255, 233/255, 0.9]});
 
         gl.drawArrays(gl.TRIANGLES, 0, squareBuffer.numElements);
 
@@ -49,17 +50,23 @@ function mosaic() {
         squares.forEach(square => {
 
             if(square.odd) {
-                square.rotation = 2*Math.sin(time/400);
+                square.rotation = Math.sin(time/400) + Math.cos(time / 400);
             } else {
-                square.rotation = Math.cos(time/500);
+                square.rotation = -Math.sin(time/400) - Math.cos(time / 400);
 
             }
             let matrix = m3.projection(w, h);
             let mpi = m3.inverse(matrix);
 
-            matrix = m3.translate(matrix, square.x, square.y);
-            matrix = m3.scale(matrix, size/w, size/h);
+            if(square.oddM) {
+                matrix = m3.translate(matrix, square.x - 10*Math.sin(time/400), square.y);
+            } else {
+                matrix = m3.translate(matrix, square.x + 15*Math.sin(time/400), square.y);
+
+            }
+            matrix = m3.scale(matrix, size * Math.abs(1+Math.sin(time/1000))/w, size/h);
             matrix = m3.multiply(matrix, mpi);
+            matrix = m3.scale(matrix, 0.5, 1.1);
             matrix = m3.rotate(matrix, square.rotation);
 
             webglUtils.setBuffersAndAttributes(gl, attributeSetters, squareBuffer);
